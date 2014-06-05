@@ -38,5 +38,8 @@
     "gruntplugin",
     "blink",
     "css"
-  ]
+  ],
+  "dependencies": {
+    "blink": "^0.1.0"
+  }
 }
