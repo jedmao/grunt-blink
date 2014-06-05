@@ -40,6 +40,7 @@
     "css"
   ],
   "dependencies": {
-    "blink": "^0.1.0"
+    "blink": "^0.1.0",
+    "typescript-require": "^0.2.6"
   }
 }
