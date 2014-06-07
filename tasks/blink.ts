@@ -6,45 +6,42 @@
  * Licensed under the MIT license.
  */
 
-'use strict';
+///<reference path="../node_modules/blink/blink.d.ts"/>
+import blink = require('blink');
 
-module.exports = function(grunt) {
+
+function task(grunt) {
 
 	// Please see the Grunt documentation for more information regarding task
 	// creation: http://gruntjs.com/creating-tasks
 
 	grunt.registerMultiTask('blink', 'Grunt plugin for Blink.', function() {
-		// Merge task-specific and/or target-specific options with these defaults.
-		var options = this.options({
-			punctuation: '.',
-			separator: ', '
+		var options = this.options();
+		var done = this.async();
+		var count = this.files.length;
+
+		blink.compile(options, this.files, (err, config, result) => {
+			if (result.src) {
+				grunt.verbose.or.writeln('Compiling "' + result.src + '"...');
+			}
+			if (err) {
+				grunt.log.notverbose.error().error(err.message);
+				grunt.fail.warn(err);
+			}
+			if (result.dest) {
+				grunt.file.write(result.dest, result.contents);
+				grunt.log.verbose.writeln('File "' + result.dest + '" created.');
+			} else {
+				grunt.log.writeln(result.contents);
+			}
+			grunt.verbose.ok();
+			if (--count === 0) {
+				done();
+			}
 		});
 
-		// Iterate over all specified file groups.
-		this.files.forEach(function(f) {
-			// Concat specified files.
-			var src = f.src.filter(function(filepath) {
-				// Warn on and remove invalid source files (if nonull was set).
-				if (!grunt.file.exists(filepath)) {
-					grunt.log.warn('Source file "' + filepath + '" not found.');
-					return false;
-				} else {
-					return true;
-				}
-			}).map(function(filepath) {
-				// Read file source.
-				return grunt.file.read(filepath);
-			}).join(grunt.util.normalizelf(options.separator));
-
-			// Handle options.
-			src += options.punctuation;
-
-			// Write the destination file.
-			grunt.file.write(f.dest, src);
-
-			// Print a success message.
-			grunt.log.writeln('File "' + f.dest + '" created.');
-		});
 	});
 
 };
+
+export = task;

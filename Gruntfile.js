@@ -6,68 +6,106 @@
  * Licensed under the MIT license.
  */
 
-'use strict';
-
 module.exports = function(grunt) {
+	'use strict';
 
-	// Project configuration.
+	require('time-grunt')(grunt);
+
 	grunt.initConfig({
-		jshint: {
-			all: [
-				'Gruntfile.js',
-				'tasks/*.js',
-				'<%= nodeunit.tests %>'
-			],
-			options: {
-				jshintrc: '.jshintrc',
-			},
-		},
 
-		// Before generating any new files, remove any previously-created files.
 		clean: {
-			tests: ['tmp'],
+			files: [
+				'tasks/*.js',
+				'test/**/*.js'
+			],
 		},
 
-		// Configuration to be run (and then tested).
+		tslint: {
+			options: {
+				configuration: grunt.file.readJSON('tslint.json')
+			},
+			files: {
+				src: [
+					'tasks/*.ts',
+					'test/**/*.ts'
+				]
+			}
+		},
+
+		typescript: {
+			options: {
+				module: 'commonjs',
+				target: 'es5'
+			},
+			tasks: {
+				src: ['tasks/*.ts'],
+				dest: ''
+			},
+			fixtures: {
+				src: ['test/fixtures/**/*.ts'],
+				dest: ''
+			},
+			specs: {
+				src: ['test/spec/**/*.ts'],
+				dest: ''
+			}
+		},
+
 		blink: {
-			default_options: {
-				options: {
-				},
-				files: {
-					'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123'],
-				},
-			},
-			custom_options: {
-				options: {
-					separator: ': ',
-					punctuation: ' !!!',
-				},
-				files: {
-					'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123'],
-				},
-			},
+			fixtures: {
+				src: 'test/fixtures/*.js',
+				dest: 'tmp/'
+			}
 		},
 
-		// Unit tests.
-		nodeunit: {
-			tests: ['test/*_test.js'],
+		mochaTest: {
+			test: {
+				options: {
+					reporter: 'spec',
+					clearRequireCache: true
+				},
+				src: 'test/spec/**/*.spec.js'
+			}
 		},
+
+		watch: {
+			tasksTs: {
+				files: ['tasks/*.ts'],
+				tasks: ['typescript:tasks']
+			},
+			fixturesTs: {
+				files: ['test/fixtures/**/*.ts'],
+				tasks: ['typescript:fixtures']
+			},
+			specsTs: {
+				files: ['test/spec/**/*.ts'],
+				tasks: ['typescript:specs']
+			},
+			tasksJs: {
+				files: ['tasks/*.js'],
+				tasks: ['mochaTest']
+			},
+			fixturesJs: {
+				files: ['test/fixtures/**/*.js'],
+				tasks: ['_blink', 'mochaTest']
+			},
+			specsJs: {
+				files: ['test/spec/**/*.js'],
+				tasks: ['mochaTest']
+			}
+		}
 
 	});
 
-	// Actually load this plugin's task(s).
-	grunt.loadTasks('tasks');
+	require('load-grunt-tasks')(grunt);
 
-	// These plugins provide necessary tasks.
-	grunt.loadNpmTasks('grunt-contrib-jshint');
-	grunt.loadNpmTasks('grunt-contrib-clean');
-	grunt.loadNpmTasks('grunt-contrib-nodeunit');
-
-	// Whenever the "test" task is run, first clean the "tmp" dir, then run this
-	// plugin's task(s), then test the result.
-	grunt.registerTask('test', ['clean', 'blink', 'nodeunit']);
-
-	// By default, lint and run all tests.
-	grunt.registerTask('default', ['jshint', 'test']);
+	grunt.registerTask('default', ['_test', 'watch']);
+	grunt.registerTask('_test', ['build', 'mochaTest']);
+	grunt.registerTask('build', ['clean', 'tslint', 'typescript', '_blink']);
+	grunt.registerTask('_blink', function() {
+		grunt.task.loadTasks('tasks');
+		grunt.task.run('blink');
+	});
+	grunt.registerTask('test', ['_test', 'clean']);
 
 };

@@ -8,6 +8,11 @@
     "email": "jed.hunsaker+npm@gmail.com",
     "url": "https://github.com/jedmao"
   },
+  "keywords": [
+    "gruntplugin",
+    "blink",
+    "css"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/jedmao/blink.git"
@@ -25,22 +30,24 @@
   "scripts": {
     "test": "grunt test"
   },
-  "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-contrib-clean": "~0.4.0",
-    "grunt-contrib-jshint": "~0.6.0",
-    "grunt-contrib-nodeunit": "~0.2.0"
+  "dependencies": {
+    "blink": "^0.2.2"
   },
   "peerDependencies": {
-    "grunt": "~0.4.5"
+    "grunt": "^0.4.5"
   },
-  "keywords": [
-    "gruntplugin",
-    "blink",
-    "css"
-  ],
-  "dependencies": {
-    "blink": "^0.1.0",
-    "typescript-require": "^0.2.6"
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-nodeunit": "^0.4.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-mocha-test": "^0.11.0",
+    "grunt-tslint": "^0.4.1",
+    "grunt-typescript-compile": "^0.2.0",
+    "load-grunt-tasks": "^0.4.0",
+    "sinon": "^1.10.2",
+    "sinon-chai": "^2.5.0",
+    "time-grunt": "^0.3.2"
   }
 }
