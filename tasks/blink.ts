@@ -21,24 +21,26 @@ function task(grunt) {
 		var done = this.async();
 		var count = this.files.length;
 
-		blink.compile(options, this.files, (err, config, result) => {
-			if (result.src) {
-				grunt.verbose.or.writeln('Compiling "' + result.src + '"...');
-			}
-			if (err) {
-				grunt.log.notverbose.error().error(err.message);
-				grunt.fail.warn(err);
-			}
-			if (result.dest) {
-				grunt.file.write(result.dest, result.contents);
-				grunt.log.verbose.writeln('File "' + result.dest + '" created.');
-			} else {
-				grunt.log.writeln(result.contents);
-			}
-			grunt.verbose.ok();
-			if (--count === 0) {
-				done();
-			}
+		this.files.forEach(file => {
+			blink.compile(options, file, (err, config, result) => {
+				if (result.src) {
+					grunt.verbose.or.writeln('Compiling "' + result.src + '"...');
+				}
+				if (err) {
+					grunt.log.notverbose.error().error(err.message);
+					grunt.fail.warn(err);
+				}
+				if (result.dest) {
+					grunt.file.write(result.dest, result.contents);
+					grunt.log.verbose.writeln('File "' + result.dest + '" created.');
+				} else {
+					grunt.log.writeln(result.contents);
+				}
+				grunt.verbose.ok();
+				if (--count === 0) {
+					done();
+				}
+			});
 		});
 
 	});
