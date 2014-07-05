@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - "0.10"
+  - "0.10.28"
 
 notifications:
   email:
@@ -10,3 +10,6 @@ notifications:
 
 before_install:
   - npm install -g grunt-cli bower
+
+script:
+  - grunt test --verbose

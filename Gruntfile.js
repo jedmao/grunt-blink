@@ -19,6 +19,15 @@ module.exports = function(grunt) {
 			],
 		},
 
+		concurrent: {
+			typescript: [
+				'tslint',
+				'typescript:tasks',
+				'typescript:fixtures',
+				'typescript:specs'
+			]
+		},
+
 		tslint: {
 			options: {
 				configuration: grunt.file.readJSON('tslint.json')
@@ -99,12 +108,16 @@ module.exports = function(grunt) {
 	require('load-grunt-tasks')(grunt);
 
 	grunt.registerTask('default', ['_test', 'watch']);
+
 	grunt.registerTask('_test', ['build', 'mochaTest']);
-	grunt.registerTask('build', ['clean', 'tslint', 'typescript', '_blink']);
+
+	grunt.registerTask('build', ['clean', 'tslint', 'concurrent:typescript', '_blink']);
+
 	grunt.registerTask('_blink', function() {
-		grunt.task.loadTasks('tasks');
+		grunt.loadTasks('tasks');
 		grunt.task.run('blink');
 	});
+
 	grunt.registerTask('test', ['_test', 'clean']);
 
 };
