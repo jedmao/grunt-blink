@@ -10,6 +10,7 @@
 import blink = require('blink');
 
 
+// ReSharper disable once UnusedLocals
 function task(grunt) {
 
 	// Please see the Grunt documentation for more information regarding task
