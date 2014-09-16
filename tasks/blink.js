@@ -8,34 +8,32 @@
 ///<reference path="../node_modules/blink/blink.d.ts"/>
 var blink = require('blink');
 
+var through = require('through2');
+var vfs = require('vinyl-fs');
+
 // ReSharper disable once UnusedLocals
 function task(grunt) {
+    function logCompileStatus() {
+        return through.obj(function (file, enc, cb) {
+            grunt.verbose.or.writeln('Compiling "' + file.path + '"...');
+            this.push(file);
+            cb();
+        });
+    }
+
     // Please see the Grunt documentation for more information regarding task
     // creation: http://gruntjs.com/creating-tasks
     grunt.registerMultiTask('blink', 'Grunt plugin for Blink.', function () {
         var options = this.options();
         var done = this.async();
-        var count = this.files.length;
 
-        this.files.forEach(function (file) {
-            blink.compile(options, file, function (err, config, result) {
-                if (result.src) {
-                    grunt.verbose.or.writeln('Compiling "' + result.src + '"...');
-                }
-                if (err) {
-                    grunt.log.notverbose.error().error(err.message);
-                    grunt.fail.warn(err);
-                }
-                if (result.dest) {
-                    grunt.file.write(result.dest, result.contents);
-                    grunt.log.verbose.writeln('File "' + result.dest + '" created.');
-                } else {
-                    grunt.log.writeln(result.contents);
-                }
+        this.files.forEach(function (filePair) {
+            vfs.src(filePair.src).pipe(logCompileStatus()).pipe(blink.compile(options)).on('error', function (err) {
+                grunt.log.notverbose.error().error(err.message);
+                grunt.fail.warn(err);
+            }).pipe(vfs.dest(filePair.dest)).on('end', function () {
                 grunt.verbose.ok();
-                if (--count === 0) {
-                    done();
-                }
+                done();
             });
         });
     });
