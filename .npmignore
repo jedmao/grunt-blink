@@ -1,0 +1,10 @@
+bower_components/
+tasks/blink.ts
+test/
+tmp/
+.*
+bower.json
+*.sln*
+*.suo
+Gruntfile.js
+tslint.json

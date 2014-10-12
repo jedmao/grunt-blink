@@ -9,7 +9,6 @@
 ///<reference path="../node_modules/blink/blink.d.ts"/>
 import blink = require('blink');
 
-
 var through = require('through2');
 var vfs = require('vinyl-fs');
 
@@ -34,7 +33,7 @@ function task(grunt) {
 		this.files.forEach(filePair => {
 			vfs.src(filePair.src)
 				.pipe(logCompileStatus())
-				.pipe(blink.compile(options))
+				.pipe(blink(options))
 				.on('error', (err: Error) => {
 					grunt.log.notverbose.error().error(err.message);
 					grunt.fail.warn(err);

@@ -28,7 +28,7 @@ function task(grunt) {
         var done = this.async();
 
         this.files.forEach(function (filePair) {
-            vfs.src(filePair.src).pipe(logCompileStatus()).pipe(blink.compile(options)).on('error', function (err) {
+            vfs.src(filePair.src).pipe(logCompileStatus()).pipe(blink(options)).on('error', function (err) {
                 grunt.log.notverbose.error().error(err.message);
                 grunt.fail.warn(err);
             }).pipe(vfs.dest(filePair.dest)).on('end', function () {
