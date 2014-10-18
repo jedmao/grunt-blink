@@ -33,7 +33,7 @@ function task(grunt) {
 		this.files.forEach(filePair => {
 			vfs.src(filePair.src)
 				.pipe(logCompileStatus())
-				.pipe(blink(options))
+				.pipe(blink(filePair.dest, options))
 				.on('error', (err: Error) => {
 					grunt.log.notverbose.error().error(err.message);
 					grunt.fail.warn(err);

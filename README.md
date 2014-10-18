@@ -41,21 +41,21 @@ grunt.initConfig({
 
 ### Options
 
-Refer to [Blink IConfigurationOptions](https://github.com/jedmao/blink#iconfigurationoptions).
+Refer to [Blink ConfigurationOptions](https://github.com/blinkjs/blink/blob/master/lib/interfaces/ConfigurationOptions.ts).
 
 
 ### Usage Examples
 
 
 #### Default Options
-In this example, the default options are used to compile `styles/app.js` into `tmp/app.css`.
+In this example, the default options are used to compile `styles/**/*.js` into `tmp/app.css`.
 
 ```js
 grunt.initConfig({
   blink: {
     options: {},
     files: {
-      'tmp/app.css': ['styles/app.js'],
+      'tmp/app.css': ['styles/**/*.js'],
     }
   }
 });
@@ -72,7 +72,7 @@ grunt.initConfig({
       style: 'compressed'
     },
     dist: {
-      'dist/app.min.css': ['styles/app.js'],
+      'dist/app.min.css': ['styles/**/*.js'],
     }
   }
 });
